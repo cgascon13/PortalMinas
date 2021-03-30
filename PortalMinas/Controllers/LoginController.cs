@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
+using PortalMinas.App_Start;
 using PortalMinas.helpers;
 using PortalMinas.Models;
 
@@ -26,7 +27,7 @@ namespace PortalMinas.Controllers
         {
             var ListEmp = db.Usuarios.Where(x => x.NomUsuario.ToLower() == datos.usuario.ToLower() && x.Password == datos.password)
                                         .Select(x => new {
-                                            Bloqueado = x.Bloqueado,
+                                            x.Bloqueado,
                                             ListEmpresa = x.EmpresasUsuarios.Where(y => y.IdUsuario == x.IdUsuario).Select(y => new AuxEmpresa { Id = y.Empresas.IdEmpresa, NomEmpresa = y.Empresas.NombreEmpresa}).ToList()
                                         }).FirstOrDefault();
             
@@ -34,7 +35,7 @@ namespace PortalMinas.Controllers
                 return Json("NoUser");
             if(ListEmp.Bloqueado)
                 return Json("UserBloq");
-
+            
             return Json(ListEmp.ListEmpresa);
         }
 
@@ -58,6 +59,15 @@ namespace PortalMinas.Controllers
                 return Json("Home/Index");
             else
                 return Json("error: NoSignIn");
+        }
+
+        [AllowAnonymous]
+        public JsonResult Logoff()
+        {
+            IAuthenticationManager authenticationManager = HttpContext.GetOwinContext().Authentication;
+            authenticationManager.SignOut(PortalMinasAuthentication.ApplicationCookie);
+
+            return Json("Ok");
         }
     }
 }

@@ -9,7 +9,6 @@
     });
 
     $('#btnLogin').click(function () {
-        console.log($('#usuario').val());
         if ($('#usuario').val() == '' && $('#password').val() == '')
             return false;
         else {
@@ -25,47 +24,32 @@
         iniciaSession();
     });
 
-    let iniciaSession = () => {
-        let user = document.getElementById("usuario").value;
-        let pass = document.getElementById("password").value;
-
-        if (user == "" || pass == "") {
-            $('#btnLogin').prop('disabled', false);
-            return false;
-        }
+    let iniciaSession = () => {       
         if ($('#btnLogin').text() == 'Ingresar') {
-            console.log($('#empresa').text());
-            $.post(ROOT + 'Login/Login', {
-                usuario: user,
-                password: pass,
-                empresa: $('#empresa').text()
-            }, "json").done(function (data) {
-                if (data.indexOf('error: ') != -1) {
-                    alert(data);
-                }
-                else {
-                    window.location.href = window.location.protocol + "//" + window.location.host + ROOT + data;
-                }
-            }).fail(function (data) {
-                console.log("ErrorLogin: " + data);
-                console.log("ErrorLogin: " + data.statusText);
-                alert('Ocurrió un error');
-            });
+            RedirectUrl();
         }
         else {
             $.post(ROOT + 'Login/VerifyData', {
-                usuario: user,
-                password: pass
+                usuario: $('#usuario').val(),
+                password: $('#password').val()
             }, "json").done(function (data) {
-                if (typeof (data) === 'object') {
-                    $('.div-empresa').css('display', 'block');
-                    $('#btnLogin').text('Ingresar').prop('disabled', false);
-                    $.each(data, function (index, item) {
+                if (typeof (data) === 'object') {                    
+                    if (data.length == 1) {
                         $('#empresa').append(
-                            $('<option value="' + item.Id + '">' + item.NomEmpresa + '</option>')
+                            $('<option value="' + data[0].Id + '">' + data[0].NomEmpresa + '</option>')
                         );
-                    });
-                    $('#usuario, #password').prop('readonly', true);
+                        RedirectUrl();
+                    }
+                    else if (data.length > 1) {
+                        $('#btnLogin').text('Ingresar').prop('disabled', false);
+                        $('.div-empresa').css('display', 'block');
+                        $.each(data, function (index, item) {
+                            $('#empresa').append(
+                                $('<option value="' + item.Id + '">' + item.NomEmpresa + '</option>')
+                            );
+                        });
+                        $('#usuario, #password').prop('readonly', true);
+                    }
                 }
                 else {
                     alert(data);
@@ -76,6 +60,31 @@
                 alert('Ocurrió un error');
             });
         }
+    }
+
+    function RedirectUrl() {
+        if ($('#usuario').val() == '' || $('#password').val() == '') {
+            $('#btnLogin').prop('disabled', false);
+            return false;
+        }
+
+        $.post(ROOT + 'Login/Login', {
+            usuario: $('#usuario').val(),
+            password: $('#password').val(),
+            empresa: $('#empresa').text()
+        }, "json").done(function (data) {
+            if (data.indexOf('error: ') != -1) {
+                console.log("ErrorLogin: " + data);
+                alert(data);
+            }
+            else { //Todo OK
+                window.location.href = window.location.protocol + "//" + window.location.host + ROOT + data;
+            }
+        }).fail(function (data) {
+            console.log("ErrorLogin: " + data);
+            console.log("ErrorLogin: " + data.statusText);
+            alert('Ocurrió un error');
+        });
     }
 
     $('#usuario').focus();

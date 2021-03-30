@@ -8,15 +8,16 @@ using PortalMinas.Models;
 
 namespace PortalMinas.Controllers
 {
+    
     public class HomeController : Controller
     {
-        //private readonly AuxDataUser du2 = adAuthenticationServices.GetInformacionUsuario(User);
+        [Authorize]
         public ActionResult Index()
         {
-            AuxDataUser du2 = adAuthenticationServices.GetInformacionUsuario(User);
-            EmpresaEntities db2 = new EmpresaEntities(adAuthenticationServices.GetConnString(du2.empresa));
+            AuxDataUser du = adAuthenticationServices.GetInformacionUsuario(User);
+            EmpresaEntities db = new EmpresaEntities(adAuthenticationServices.GetConnString(du.empresa));
 
-            return View(db2.Comp_A.ToList());
+            return View(db.Comp_A.ToList());
         }
 
         public ActionResult About()
