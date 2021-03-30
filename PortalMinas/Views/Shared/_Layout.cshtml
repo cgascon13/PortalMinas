@@ -11,23 +11,23 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
-<script>
-    $(document).ready(function () {
-    $('#CerrarSesionBtn').on('click', function () {
-    $.post({
-        url: '@Url.Content("~/Login/Logoff")',
-        data: {},
-        success:
-            function () {
-                window.location.href = "@Url.Content("~/Login/Login")";
-            },
-        error:
-            function () {
-                console.log("error al cerrar sesión");
-            }
+        <script>
+            $(document).ready(function () {
+            $('#CerrarSesionBtn').on('click', function () {
+                $.post({
+                    url: '@Url.Content("~/Login/Logoff")',
+                    data: {},
+                    success:
+                        function () {
+                            window.location.href = "@Url.Content("~/Login/Login")";
+                        },
+                    error:
+                        function () {
+                            console.log("error al cerrar sesión");
+                        }
+                });
+            });
         });
-    });
-});
 </script>
 
 </head>
