@@ -1,0 +1,48 @@
+﻿@using System.Security.Claims
+@model IEnumerable<PortalMinas.Models.Comp_A>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<script>
+    let items = @Html.Raw(Json.Encode(Model));
+    console.log(items);
+    $(document).ready(function () {
+        $.each(items, function (index, item) {
+            $('#ejemplo').append($('<span>' + item.Id + '</span>.- <bold>' + item.Nombre + '</bold>'));
+        });
+    });
+
+</script>
+<div class="jumbotron">
+    <h1 id="ejemplo"></h1>
+</div>
+
+@{ var userRole = ((ClaimsPrincipal)User).Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value; }
+<div class="row">
+    @if (userRole == "SuperUser")
+    {
+        <div class="col-md-4">
+            <h2>Contenido solo para SuperUser</h2>
+            <p>
+                Este contenido solo puede ser visto por usuarios que tienen un rol de <b>"SuperUser"</b> en su propia base de datos.
+            </p>            
+        </div>
+    }
+    @if (userRole == "Admin")
+    {
+        <div class="col-md-4">
+            <h2>Contenido solo para Admin</h2>
+            <p>
+                Este contenido solo se puede ver si eres un usuario con el rol de <b>Admin</b> que se saca de la tabla de Usuarios de su 
+                respectiva base de datos.
+            </p>            
+        </div>
+    }
+        <div class="col-md-4">
+            <h2>Contenido General</h2>
+            <p>
+                Este contenido se puede ver siempre y no esta condicionado a ningún rol u otro tipo de criterio de las base de datos.
+            </p>
+        </div>
+    </div>

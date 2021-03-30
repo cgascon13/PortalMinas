@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="minaNubeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Empresas">
+          <Key>
+            <PropertyRef Name="IdEmpresa" />
+          </Key>
+          <Property Name="IdEmpresa" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NombreEmpresa" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="EmpresasUsuarios">
+          <Key>
+            <PropertyRef Name="IdEmrpesaUsuario" />
+          </Key>
+          <Property Name="IdEmrpesaUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="IdEmpresa" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NomRol" Type="varchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NomUsuario" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Bloqueado" Type="bit" Nullable="false" />
+          <Property Name="IdRol" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_EmpresasUsuarios_Empresas">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="EmpresasUsuarios" Type="Self.EmpresasUsuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="IdEmpresa" />
+            </Principal>
+            <Dependent Role="EmpresasUsuarios">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpresasUsuarios_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="EmpresasUsuarios" Type="Self.EmpresasUsuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="EmpresasUsuarios">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuarios_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="IdRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="minaNubeModelStoreContainer">
+          <EntitySet Name="Empresas" EntityType="Self.Empresas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmpresasUsuarios" EntityType="Self.EmpresasUsuarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_EmpresasUsuarios_Empresas" Association="Self.FK_EmpresasUsuarios_Empresas">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="EmpresasUsuarios" EntitySet="EmpresasUsuarios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpresasUsuarios_Usuarios" Association="Self.FK_EmpresasUsuarios_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="EmpresasUsuarios" EntitySet="EmpresasUsuarios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuarios_Roles" Association="Self.FK_Usuarios_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="minaNubeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Empresas">
+          <Key>
+            <PropertyRef Name="IdEmpresa" />
+          </Key>
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NombreEmpresa" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="EmpresasUsuarios" Relationship="Self.FK_EmpresasUsuarios_Empresas" FromRole="Empresas" ToRole="EmpresasUsuarios" />
+        </EntityType>
+        <EntityType Name="EmpresasUsuarios">
+          <Key>
+            <PropertyRef Name="IdEmrpesaUsuario" />
+          </Key>
+          <Property Name="IdEmrpesaUsuario" Type="Int32" Nullable="false" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Empresas" Relationship="Self.FK_EmpresasUsuarios_Empresas" FromRole="EmpresasUsuarios" ToRole="Empresas" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK_EmpresasUsuarios_Usuarios" FromRole="EmpresasUsuarios" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NomUsuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="EmpresasUsuarios" Relationship="Self.FK_EmpresasUsuarios_Usuarios" FromRole="Usuarios" ToRole="EmpresasUsuarios" />
+          <Property Name="Bloqueado" Type="Boolean" Nullable="false" />
+          <Property Name="IdRol" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Roles" Relationship="minaNubeModel.FK_Usuarios_Roles" FromRole="Usuarios" ToRole="Roles" />
+        </EntityType>
+        <Association Name="FK_EmpresasUsuarios_Empresas">
+          <End Role="Empresas" Type="Self.Empresas" Multiplicity="1" />
+          <End Role="EmpresasUsuarios" Type="Self.EmpresasUsuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresas">
+              <PropertyRef Name="IdEmpresa" />
+            </Principal>
+            <Dependent Role="EmpresasUsuarios">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmpresasUsuarios_Usuarios">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+          <End Role="EmpresasUsuarios" Type="Self.EmpresasUsuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="EmpresasUsuarios">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="minaNubeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Empresas" EntityType="Self.Empresas" />
+          <EntitySet Name="EmpresasUsuarios" EntityType="Self.EmpresasUsuarios" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
+          <AssociationSet Name="FK_EmpresasUsuarios_Empresas" Association="Self.FK_EmpresasUsuarios_Empresas">
+            <End Role="Empresas" EntitySet="Empresas" />
+            <End Role="EmpresasUsuarios" EntitySet="EmpresasUsuarios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmpresasUsuarios_Usuarios" Association="Self.FK_EmpresasUsuarios_Usuarios">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="EmpresasUsuarios" EntitySet="EmpresasUsuarios" />
+          </AssociationSet>
+          <EntitySet Name="Roles" EntityType="minaNubeModel.Roles" />
+          <AssociationSet Name="FK_Usuarios_Roles" Association="minaNubeModel.FK_Usuarios_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NomRol" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Usuarios" Relationship="minaNubeModel.FK_Usuarios_Roles" FromRole="Roles" ToRole="Usuarios" />
+        </EntityType>
+        <Association Name="FK_Usuarios_Roles">
+          <End Type="minaNubeModel.Roles" Role="Roles" Multiplicity="1" />
+          <End Type="minaNubeModel.Usuarios" Role="Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="IdRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="minaNubeModelStoreContainer" CdmEntityContainer="minaNubeEntities">
+          <EntitySetMapping Name="Empresas">
+            <EntityTypeMapping TypeName="minaNubeModel.Empresas">
+              <MappingFragment StoreEntitySet="Empresas">
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="NombreEmpresa" ColumnName="NombreEmpresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmpresasUsuarios">
+            <EntityTypeMapping TypeName="minaNubeModel.EmpresasUsuarios">
+              <MappingFragment StoreEntitySet="EmpresasUsuarios">
+                <ScalarProperty Name="IdEmrpesaUsuario" ColumnName="IdEmrpesaUsuario" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="minaNubeModel.Usuarios">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
+                <ScalarProperty Name="Bloqueado" ColumnName="Bloqueado" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="NomUsuario" ColumnName="NomUsuario" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="minaNubeModel.Roles">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="NomRol" ColumnName="NomRol" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
